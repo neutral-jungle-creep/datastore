@@ -7,11 +7,13 @@ DOCSTRING: Меняет подстроки на указанные во всем
 from loguru import logger
 
 
-def change(word: str, file: str, func=None) -> list:
+def change(o_word: str, file: str, func=None) -> list:
     '''
     Вернет коллекцию из строк в которых подстрока {word}, если она есть, изменена на полученную из консоли.
     '''
     counter_edit = 0
+    global new_word
+    new_word = input('Правильное слово: ')
     if func is not None:
         link = f'{file}.csv'
     else:
@@ -20,8 +22,8 @@ def change(word: str, file: str, func=None) -> list:
         global head
         head = file_input.readline()  # первая строка
         for line in file_input.readlines():
-            if f'{word} ' in line or f'{word})' in line or f'{word}"' in line:  # чтобы скрипт не менял context
-                change_word(word, line)
+            if f'{o_word} ' in line or f'{o_word})' in line or f'{o_word}"' in line:  # чтобы скрипт не менял context
+                change_word(o_word, line)
                 counter_edit += 1
             data.append(line)
     logger.debug(f'Отредактировано {counter_edit} строк')
@@ -52,7 +54,6 @@ data = []
 
 if __name__ == '__main__':
     logger.add('logs.log')
-    new_word = input('Правильное слово: ')
     old_word = input('Заменяемое слово: ')
     file_name = input('Название файла: ')
     change(old_word, file_name, write)
