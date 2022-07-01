@@ -1,5 +1,8 @@
 '''
-DOCSTRING:
+DOCSTRING: Удаляет из файла все строки, содержащие введенную подстроку.
+Принимает название файла без расширения и строку.
+Если сценарий вызван как импортируемый, возвращает коллекцию строк.
+Иначе возвращает файл del_lines_{file_name} с отредактированными строками.
 '''
 from loguru import logger
 
@@ -42,6 +45,6 @@ new_data = []
 
 if __name__ == '__main__':
     logger.add('logs.log')
-    word = input('Слово: ')  # слово, которое будет искать скрипт в файле в колонке Query
+    word_del = input('Слово: ')  # слово, которое будет искать скрипт в файле в колонке Query
     file_name = input('Название файла: ')  # название файла (presets)
-    read_file(file_name, word, write_file)
+    read_file(file_name, word_del, write_file)
