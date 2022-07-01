@@ -21,14 +21,14 @@ def change(word: str, file: str, func=None) -> list:
         global head
         head = file_input.readline()  # первая строка
         for line in file_input.readlines():
-            if f'{word} ' in line or f'{word})' in line or f'{word}"' in line:
+            if f'{word} ' in line or f'{word})' in line or f'{word}"' in line:  # чтобы скрипт не менял context
                 change_word(word, line)
                 counter_edit += 1
             data.append(line)
     logger.debug(f'Отредактировано {counter_edit} строк')
     if func is not None:
         logger.debug(f'Запуск функции write')
-        func(data)
+        func()
     return data
 
 
@@ -40,7 +40,7 @@ def change_word(word: str, line: str) -> None:
     logger.info(f'Новая строка - {new_line}')
 
 
-def write(data: list) -> None:
+def write() -> None:
     '''Если сценарий запущен самостоятельно, запишет файл с измененными строками'''
     with open(f'change_lines_{file_name}.csv', 'w', encoding='utf-8') as file_output:
         file_output.write(head)
