@@ -10,7 +10,6 @@ from loguru import logger
 def change(word: str, file: str, func=None) -> list:
     '''
     Вернет коллекцию из строк в которых подстрока {word}, если она есть, изменена на полученную из консоли.
-    Если сценарий запущен как импортируемый модуль, передавать именованный аргумент не требуется.
     '''
     counter_edit = 0
     if func is not None:
@@ -49,11 +48,11 @@ def write() -> None:
 
 
 data = []
-new_word = input('Правильное слово: ')
 
 
 if __name__ == '__main__':
     logger.add('logs.log')
+    new_word = input('Правильное слово: ')
     old_word = input('Заменяемое слово: ')
     file_name = input('Название файла: ')
     change(old_word, file_name, write)
