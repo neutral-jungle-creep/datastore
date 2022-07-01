@@ -1,32 +1,36 @@
-import enchant
+
 import pandas as pd
 import csv
-import loguru
-
-file_name = input('file name: ')  # search
-word = input('word: ')
-df = pd.read_csv(f'{file_name}.csv', delimiter='|')
-df['error'] = 0
+from loguru import logger
 
 
-def word_check(item):
-    # проверяет наличие слова в человеческом запросе
-    if item != word:
-        return True
-    return False
+def word_check(item: str) -> bool:
+    '''Вернет правду, если проверяемая строка равна введенной'''
+    return item == word_for_search
 
 
-def query_check(serie: pd.Series):
-    debracket = serie.replace('(', '').replace(')', '')
-    debracket: str
-    list_from_str = debracket.split()
-    result = all(map(word_check, list_from_str))
-    if not result:
-        loguru.logger.info(f'запрос, не прошедший проверку: {list_from_str}')
+def query_check(item: str) -> bool:
+    '''Вернет правду, если в проверяемом списке есть введенное слово'''
+    item = item.replace('(', '').replace(')', '').split()
+    result = any(map(word_check, item))
+    if result:
+        logger.info(f'запрос, прошедший проверку: {item}')
     return result
 
 
-df['error'] = df['Search Query'].apply(query_check)
+def search(file: str) -> None:
+    '''Запишет в файл с именем 'result_{file_name}.csv строки с введенным словом'''
+    df = pd.read_csv(f'{file}.csv', delimiter='|')
+    df['word'] = 0
 
-trunc_df = df.loc[df['error'] == False]
-trunc_df.to_csv(f'result_{file_name}.csv', sep='|', quoting=csv.QUOTE_NONE)
+    df['word'] = df['Search Query'].apply(query_check)
+
+    trunc_df = df.loc[df['word'] == True]
+    trunc_df = trunc_df.drop('word', axis=1)
+    trunc_df['PresetID'] = trunc_df['PresetID'].astype(int)
+    trunc_df.to_csv(f'result_{file}.csv', sep='|', quoting=csv.QUOTE_NONE, index=False)
+
+
+file_name = input('file name: ')  # presets
+word_for_search = input('word: ')  # слово, которое будет искать скрипт в файле в колонке Query
+# search(file_name)
