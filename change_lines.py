@@ -13,3 +13,8 @@ def change(word: str) -> list:
             logger.info(f'Новая строка - {new_line}')
     logger.debug(f'Отредактировано {len(data)} строк')
     return data
+
+
+if __name__ == '__main__':
+    old_word = input('Слово, которое заменить: ')
+    change(old_word)
