@@ -7,7 +7,7 @@ DOCSTRING: Меняет подстроки на указанные во всем
 from loguru import logger
 
 
-def change(o_word: str, file: str, func=None) -> list:
+def main(o_word: str, file: str, func=None) -> list:
     '''
     Вернет коллекцию из строк в которых подстрока {word}, если она есть, изменена на полученную из консоли.
     '''
@@ -25,7 +25,8 @@ def change(o_word: str, file: str, func=None) -> list:
             if f'{o_word} ' in line or f'{o_word})' in line or f'{o_word}"' in line:  # чтобы скрипт не менял context
                 change_word(o_word, line)
                 counter_edit += 1
-            data.append(line)
+            else:
+                data.append(line)
     logger.debug(f'Отредактировано {counter_edit} строк')
     if func is not None:
         logger.debug(f'Запуск функции write')
@@ -56,4 +57,4 @@ if __name__ == '__main__':
     logger.add('logs.log')
     old_word = input('Заменяемое слово: ')
     file_name = input('Название файла: ')
-    change(old_word, file_name, write)
+    main(old_word, file_name, write)
