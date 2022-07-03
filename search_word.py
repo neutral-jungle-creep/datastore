@@ -8,16 +8,7 @@ import csv
 from loguru import logger
 
 
-def query_check(item: str) -> bool:
-    '''Вернет правду, если в проверяемом списке есть введенное слово.'''
-    item = item.replace('(', '').replace(')', '').split()
-    result = any(map(lambda i: i == word_for_search, item))
-    if result:
-        logger.info(f'запрос, прошедший проверку: {item}')
-    return result
-
-
-def search(file: str) -> None:
+def main(file: str) -> None:
     '''Запишет в файл с именем 'search_word_{file_name}.csv строки с введенным словом.'''
     df = pd.read_csv(f'{file}.csv', delimiter='|')
     df['word'] = 0
@@ -31,10 +22,19 @@ def search(file: str) -> None:
     logger.debug(f'В файл search_word_{file}.csv записано {len(trunc_df)} строк со словом {word_for_search}')
 
 
+def query_check(item: str) -> bool:
+    '''Вернет правду, если в проверяемом списке есть введенное слово.'''
+    item = item.replace('(', '').replace(')', '').split()
+    result = any(map(lambda i: i == word_for_search, item))
+    if result:
+        logger.info(f'запрос, прошедший проверку: {item}')
+    return result
+
+
 word_for_search = input('Слово: ')  # слово, которое будет искать скрипт в файле в колонке Query
 file_name = input('Название файла: ')  # название файла (presets)
 
 
 if __name__ == '__main__':
     logger.add('logs.log')
-    search(file_name)
+    main(file_name)
