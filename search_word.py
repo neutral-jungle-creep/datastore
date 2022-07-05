@@ -18,7 +18,7 @@ def main(file: str) -> None:
                 new_data.append(line)
                 logger.info(f'запрос, прошедший проверку: {query}')
 
-    with open('search_word_{file_name}.csv', 'w', encoding='utf-8') as file_output:
+    with open(f'search_word_{file_name}.csv', 'w', encoding='utf-8') as file_output:
         file_output.write(head)
         file_output.writelines(new_data)
         logger.debug(f'В файл search_word_{file}.csv записано {len(new_data)} строк со словом {word_for_search}')
