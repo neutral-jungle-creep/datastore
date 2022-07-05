@@ -26,19 +26,19 @@ def main(o_word: str, file: str, func=None) -> list:
                 change_word(o_word, line)
                 counter_edit += 1
             else:
-                data.append(line)
+                new_data.append(line)
     logger.debug(f'Отредактировано {counter_edit} строк')
     if func is not None:
         logger.debug(f'Запуск функции write')
         func()
-    return data
+    return new_data
 
 
 def change_word(word: str, line: str) -> None:
     '''Добавит отредактированную строку в коллекцию со строками и посчитает ее'''
     new_line = line.replace(f'{word} ', f'{new_word} ').replace(f'{word})',
                                                                 f'{new_word})').replace(f'{word}"', f'{new_word}"')
-    data.append(new_line)
+    new_data.append(new_line)
     logger.info(f'Новая строка - {new_line}')
 
 
@@ -46,11 +46,11 @@ def write() -> None:
     '''Если сценарий запущен самостоятельно, запишет файл с измененными строками'''
     with open(f'change_lines_{file_name}.csv', 'w', encoding='utf-8') as file_output:
         file_output.write(head)
-        file_output.writelines(data)
-        logger.debug(f'В файл change_lines_{file_name} записано {len(data)} строк')
+        file_output.writelines(new_data)
+        logger.debug(f'В файл change_lines_{file_name} записано {len(new_data)} строк')
 
 
-data = []
+new_data = []
 
 
 if __name__ == '__main__':
