@@ -13,7 +13,7 @@ def main(o_word: str, file: str, func=None) -> list:
     '''
     counter_edit = 0
     global new_word
-    new_word = input('Правильное слово: ')
+    new_word = input('Новое слово: ')
     if func is not None:
         link = f'C:\\Pепозиторий\\datastore-1\\indices\\{file}.csv'
     else:
