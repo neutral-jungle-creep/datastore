@@ -13,7 +13,7 @@ def main(word: str, file: str, func=None) -> list:
     Если сценарий запущен как импортируемый модуль, передавать именованный аргумент не требуется.
     '''
     counter_del = 0  # считает удаленные строки
-    with open(f'{file}.csv', 'r', encoding='utf-8') as data:
+    with open(f'C:\\Pепозиторий\\datastore-1\\indices\\{file}.csv', 'r', encoding='utf-8') as data:
         global head
         head = data.readline()  # первая строка
         logger.debug(f'Первая строка = {head}')

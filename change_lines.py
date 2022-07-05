@@ -15,7 +15,7 @@ def main(o_word: str, file: str, func=None) -> list:
     global new_word
     new_word = input('Правильное слово: ')
     if func is not None:
-        link = f'{file}.csv'
+        link = f'C:\\Pепозиторий\\datastore-1\\indices\\{file}.csv'
     else:
         link = f'search_word_{file}.csv'
     with open(link, 'r', encoding='utf-8') as file_input:

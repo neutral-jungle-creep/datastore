@@ -10,7 +10,7 @@ from loguru import logger
 
 def main(file: str) -> None:
     '''Запишет в файл с именем 'search_word_{file_name}.csv строки с введенным словом.'''
-    df = pd.read_csv(f'{file}.csv', delimiter='|')
+    df = pd.read_csv(f'C:\\Pепозиторий\\datastore-1\\indices\\{file}.csv', delimiter='|')
     df['word'] = 0
 
     df['word'] = df['Search Query'].apply(query_check)
