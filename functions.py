@@ -16,7 +16,7 @@ def read(file: str) -> list:
 
 def write(file: str, data: list) -> None:
     '''Примет строку - название файла и список строк с данными. Запишет список построчно в файл.'''
-    with open(f'new_{file}.csv', 'w', encoding='utf-8') as file_output:
+    with open(f'{file}.csv', 'w', encoding='utf-8') as file_output:
         file_output.write(head)
         file_output.writelines(data)
         logger.debug(f'Записано {len(data)} строк')
@@ -27,3 +27,7 @@ def search_word(word: str, line: str) -> bool:
      в человеческом запросе'''
     query = line[1:line.index(')')].split()
     return word in query
+
+
+def delete_line():
+    pass
