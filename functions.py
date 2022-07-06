@@ -40,9 +40,8 @@ def change_word(o_word: str, n_word: str, line: str) -> str:
 
 
 def request_v2(item: str) -> str:
-    '''Вернет строку с отчетом по записи.'''
+    '''Примет строку с человеческим запросом. Вернет отчет по записи из ручки v2.'''
     logger.info(f'Проверка человеческого запроса: ({item})')
-
     link = 'http://exactmatch-common.wbx-search-internal.svc.k8s.dataline/v2/search?'
     query = {"query": item}
 
@@ -50,5 +49,5 @@ def request_v2(item: str) -> str:
         session.headers['User-Agent'] = 'insomnia/2022.2.1'
         response = session.get(link, params=query)
         result = json.loads(response.text)
-        logger.debug(f'Результат: {result}')
-    return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
+        logger.debug(f'Результат проверки: {result}')
+    return result
