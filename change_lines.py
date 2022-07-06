@@ -1,60 +1,31 @@
 '''
 DOCSTRING: Меняет подстроки на указанные во всем файле.
 Принимает название файла без расширения, строку, которую заменить, и строку, на которую заменить.
-Если сценарий вызван как импортируемый, возвращает коллекцию строк.
-Иначе возвращает файл change_lines_{file_name} с отредактированными строками.
+Возвращает файл change_lines_{file_name} с отредактированными строками.
 '''
 from loguru import logger
+import functions
 
 
-def main(o_word: str, file: str, func=None) -> list:
-    '''
-    Вернет коллекцию из строк в которых подстрока {word}, если она есть, изменена на полученную из консоли.
-    '''
+def main(o_word: str, n_world: str) -> None:
+    '''Запишет в файл change_lines_{file_name} коллекцию из строк в которых подстрока {word},
+     если она есть, изменена на полученную из консоли.'''
     counter_edit = 0
-    global new_word
-    new_word = input('Новое слово: ')
-    if func is not None:
-        link = f'C:\\Pепозиторий\\datastore-1\\indices\\{file}.csv'
-    else:
-        link = f'search_word_{file}.csv'
-    with open(link, 'r', encoding='utf-8') as file_input:
-        global head
-        head = file_input.readline()  # первая строка
-        for line in file_input.readlines():
-            if f'{o_word} ' in line or f'{o_word})' in line or f'{o_word}"' in line:  # чтобы скрипт не менял context
-                change_word(o_word, line)
-                counter_edit += 1
-            else:
-                new_data.append(line)
+    data = functions.read(file_name)
+    for line in data:
+        if f'{o_word} ' in line or f'{o_word})' in line or f'{o_word}"' in line:  # чтобы скрипт не менял context
+            new_data.append(functions.change_word(o_word, n_world, line))
+            counter_edit += 1
+        else:
+            new_data.append(line)
     logger.debug(f'Отредактировано {counter_edit} строк')
-    if func is not None:
-        logger.debug(f'Запуск функции write')
-        func()
-    return new_data
-
-
-def change_word(word: str, line: str) -> None:
-    '''Добавит отредактированную строку в коллекцию со строками и посчитает ее'''
-    new_line = line.replace(f'{word} ', f'{new_word} ').replace(f'{word})',
-                                                                f'{new_word})').replace(f'{word}"', f'{new_word}"')
-    new_data.append(new_line)
-    logger.info(f'Новая строка - {new_line}')
-
-
-def write() -> None:
-    '''Если сценарий запущен самостоятельно, запишет файл с измененными строками'''
-    with open(f'change_lines_{file_name}.csv', 'w', encoding='utf-8') as file_output:
-        file_output.write(head)
-        file_output.writelines(new_data)
-        logger.debug(f'В файл change_lines_{file_name} записано {len(new_data)} строк')
-
-
-new_data = []
+    functions.write(f'change_lines_{file_name}', new_data)
 
 
 if __name__ == '__main__':
     logger.add('logs.log')
-    old_word = input('Заменяемое слово: ')
     file_name = input('Название файла: ')
-    main(old_word, file_name, write)
+    old_word = input('Заменяемое слово: ')  # слово, которое будет искать скрипт в файле в колонке Query
+    new_word = input('Новое слово: ')  # слово, на которое скрипт заменит найденное старое
+    new_data = []
+    main(old_word, new_word)
