@@ -14,7 +14,7 @@ def main(word: str) -> None:
         if functions.search_word(word, line):
             new_data.append(line)
             logger.info(f'запрос, прошедший проверку: {line[:line.index(")") + 1]}')
-    functions.write('search_word', new_data)
+    functions.write(f'search_word_{file_name}', new_data)
 
 
 if __name__ == '__main__':
