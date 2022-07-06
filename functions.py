@@ -29,5 +29,9 @@ def search_word(word: str, line: str) -> bool:
     return word in query
 
 
-def delete_line():
-    pass
+def change_word(o_word: str, n_word: str, line: str) -> str:
+    '''Примет заменяемое слово, новое слово и строку. Вернет строку с замененной подстрокой на новую.'''
+    new_line = line.replace(f'{o_word} ', f'{n_word} ').replace(f'{o_word})',
+                                                                f'{n_word})').replace(f'{o_word}"', f'{n_word}"')
+    logger.info(f'Новая строка - {new_line}')
+    return new_line
