@@ -2,6 +2,8 @@
 DOCSTRING: Модуль c функциями для работы файлами датастора.
 '''
 from loguru import logger
+import requests
+import json
 
 
 def read(file: str) -> list:
@@ -35,3 +37,18 @@ def change_word(o_word: str, n_word: str, line: str) -> str:
                                                                 f'{n_word})').replace(f'{o_word}"', f'{n_word}"')
     logger.info(f'Новая строка - {new_line}')
     return new_line
+
+
+def request_v2(item: str) -> str:
+    '''Вернет строку с отчетом по записи.'''
+    logger.info(f'Проверка человеческого запроса: ({item})')
+
+    link = 'http://exactmatch-common.wbx-search-internal.svc.k8s.dataline/v2/search?'
+    query = {"query": item}
+
+    with requests.session() as session:
+        session.headers['User-Agent'] = 'insomnia/2022.2.1'
+        response = session.get(link, params=query)
+        result = json.loads(response.text)
+        logger.debug(f'Результат: {result}')
+    return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
