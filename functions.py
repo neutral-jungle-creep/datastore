@@ -8,7 +8,7 @@ import json
 
 def read(file: str) -> list:
     '''Примет строку - название файла. Вернет список строк из файла без строки заголовка.'''
-    with open(f'{file}.csv', 'r', encoding='utf-8') as file_input:  # C:\\Pепозиторий\\datastore-1\\indices\\
+    with open(f'C:\\Pепозиторий\\datastore-1\\indices\\{file}.csv', 'r', encoding='utf-8') as file_input:
         global head
         head = file_input.readline()
         data = file_input.readlines()
@@ -21,7 +21,7 @@ def write(file: str, data: list) -> None:
     with open(f'{file}.csv', 'w', encoding='utf-8') as file_output:
         file_output.write(head)
         file_output.writelines(data)
-        logger.debug(f'Записано {len(data)} строк')
+        logger.debug(f'В файл {file} записано {len(data)} строк')
 
 
 def search_word(word: str, line: str) -> bool:
