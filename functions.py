@@ -51,3 +51,8 @@ def request_v2(item: str) -> dict:
         result = json.loads(response.text)
         logger.debug(f'Результат проверки: {result}')
     return result
+
+
+def format_report(result) -> str:
+    '''Примет результат из ручки. Вернет отформатированную строку для формирования отчета'''
+    return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
