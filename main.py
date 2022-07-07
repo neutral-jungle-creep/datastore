@@ -13,14 +13,17 @@ def mine() -> None:
     head = functions.head
     for line in data:
         if functions.search_word(old_word, line):
-            analiz(line)
+            result_code = analiz(line)
+
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
     functions.write('C:\\CodePy\\wb\\datastore\\main_reports\\additional_search', additional_search)
     functions.write('C:\\CodePy\\wb\\datastore\\main_reports\\merger', merger)
     functions.write('C:\\CodePy\\wb\\datastore\\main_reports\\delete', delete)
 
 
-def analiz(line: str):
+def analiz(line: str) -> int:
+    '''Примет строку из коллекции с данными. Вернет код результата полученный из ручки v2 по запросу с новым словом.
+    1 - допоиск; 2 - онлайн поиск; 3 - остальное(бренд, пересет, каталожная выдача)'''
     query = line[1:line.index(')')]
     request_old = functions.request_v2(query)
     request_new = functions.request_v2(query.replace(old_word, new_word))
