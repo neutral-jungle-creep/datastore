@@ -7,14 +7,14 @@ from loguru import logger
 import functions
 
 
-def main(o_word: str, n_world: str) -> None:
+def main(o_word: str, n_word: str) -> None:
     '''Запишет в файл change_lines_{file_name} коллекцию из строк в которых подстрока {word},
      если она есть, изменена на полученную из консоли.'''
     counter_edit = 0
     data = functions.read(file_name)
     for line in data:
         if f'{o_word} ' in line or f'{o_word})' in line or f'{o_word}"' in line:  # чтобы скрипт не менял context
-            new_data.append(functions.change_word(o_word, n_world, line))
+            new_data.append(functions.change_word(o_word, n_word, line))
             counter_edit += 1
         else:
             new_data.append(line)
