@@ -8,7 +8,7 @@ import json
 
 def read(file: str) -> list:
     '''Примет строку - название файла. Вернет список строк из файла без строки заголовка.'''
-    with open(f'C:\\Pепозиторий\\datastore-1\\indices\\{file}.csv', 'r', encoding='utf-8') as file_input:
+    with open(f'{file}.csv', 'r', encoding='utf-8') as file_input:  # C:\\Pепозиторий\\datastore-1\\indices\\
         global head
         head = file_input.readline()
         data = file_input.readlines()
@@ -39,7 +39,7 @@ def change_word(o_word: str, n_word: str, line: str) -> str:
     return new_line
 
 
-def request_v2(item: str) -> str:
+def request_v2(item: str) -> dict:
     '''Примет строку с человеческим запросом. Вернет отчет по записи из ручки v2.'''
     logger.info(f'Проверка человеческого запроса: ({item})')
     link = 'http://exactmatch-common.wbx-search-internal.svc.k8s.dataline/v2/search?'
