@@ -12,7 +12,6 @@ def read(file: str) -> list:
         global head
         head = file_input.readline()
         data = file_input.readlines()
-        logger.debug(f'Прочитано {len(data)} строк')
     return data
 
 
@@ -21,7 +20,6 @@ def write(file: str, data: list) -> None:
     with open(f'{file}.csv', 'w', encoding='utf-8') as file_output:
         file_output.write(head)
         file_output.writelines(data)
-        logger.debug(f'В файл {file} записано {len(data)} строк')
 
 
 def search_word(word: str, line: str) -> bool:
@@ -35,13 +33,11 @@ def change_word(o_word: str, n_word: str, line: str) -> str:
     '''Примет заменяемое слово, новое слово и строку. Вернет строку с замененной подстрокой на новую.'''
     new_line = line.replace(f'{o_word} ', f'{n_word} ').replace(f'{o_word})',
                                                                 f'{n_word})').replace(f'{o_word}"', f'{n_word}"')
-    logger.info(f'Новая строка - {new_line}')
     return new_line
 
 
 def request_v2(item: str) -> dict:
     '''Примет строку с человеческим запросом. Вернет отчет по записи из ручки v2.'''
-    logger.info(f'Проверка человеческого запроса: ({item})')
     link = 'http://exactmatch-common.wbx-search-internal.svc.k8s.dataline/v2/search?'
     query = {"query": item}
 
@@ -55,3 +51,16 @@ def request_v2(item: str) -> dict:
 def format_report(result) -> str:
     '''Примет результат из ручки. Вернет отформатированную строку для формирования отчета'''
     return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
+
+
+def del_lines(word: str, data: list) -> list:
+    '''Примет строку - слово, строки с которым в человеческом запросе нужно удалить из датастора.
+    Вернет коллекцию строк.'''
+    new_data = []
+    counter_del = 0
+    for line in data:
+        if not search_word(word, line):
+            new_data.append(line)
+        else:
+            counter_del += 1
+    return new_data
