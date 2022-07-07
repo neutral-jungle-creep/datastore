@@ -22,8 +22,8 @@ def mine() -> None:
             new_data.append(line)
 
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
-    functions.write('C:\\CodePy\\wb\\datastore\\main_reports\\edit_preset', edit_preset)
-    functions.write('C:\\CodePy\\wb\\datastore\\main_reports\\del_preset', del_preset)
+    functions.write(f'C:\\CodePy\\wb\\datastore\\main_reports\\edit_preset_{old_word}', edit_preset)
+    functions.write(f'C:\\CodePy\\wb\\datastore\\main_reports\\del_preset_{old_word}', del_preset)
 
     functions.head = head
     functions.write(file_name, new_data)
@@ -35,8 +35,8 @@ def analiz(line: str) -> int:
     '''Примет строку из коллекции с данными. Вернет код результата полученный из ручки v2 по запросу с новым словом.
     1 - допоиск и онлайн поиск; 0 - остальное(бренд, каталог, пресет).'''
     query = line[1:line.index(')')]
-    request_old = functions.request_v2(query)
     logger.info(f'Проверка человеческого запроса: ({query})')
+    request_old = functions.request_v2(query)
     request_new = functions.request_v2(query.replace(old_word, new_word))
     logger.info(f'old query: {request_old} | new query: {request_new}\n')
     if '_t0=' in request_new["query"]:
