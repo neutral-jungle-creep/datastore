@@ -1,21 +1,22 @@
 '''
-DOCSTRING:
-1. сандали - искать по ручке запрос с двумя И вместо одной
-1.1 если онлайн поиск, править запись
+DOCSTRING: Принимает название файла без расширения, строку, которую заменить, и строку, на которую заменить.
+Если онлайн поиск, правит имеющуюся запись
 1.2 иначе удалить запись
 '''
 import functions
 from loguru import logger
-
+# 554486 554523
 
 def mine() -> None:
-    new_data = functions.read(file_name)
+    '''Запишет два файла с отчетами в папку main_reports и измененный файл с пресетами presets.csv.'''
+    data = functions.read(file_name)
     head = functions.head
-    for line in new_data:
+    for line in data:
         if functions.search_word(old_word, line):
             if analiz(line):
                 new_data.append(functions.change_word(old_word, new_word, line))
-        new_data.append(line)
+        else:
+            new_data.append(line)
 
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
     functions.write('C:\\CodePy\\wb\\datastore\\main_reports\\edit_preset', edit_preset)
@@ -23,6 +24,7 @@ def mine() -> None:
 
     functions.head = head
     functions.write(file_name, new_data)
+    logger.debug(f'Удалено {len(data) - len(new_data)} строк')
 
 
 def analiz(line: str) -> int:
@@ -50,6 +52,5 @@ if __name__ == '__main__':
     file_name = input('Название файла: ')  # название файла
     old_word = input('Заменяемое слово: ')  # слово, которое будет искать скрипт в файле в колонке Query
     new_word = input('Новое слово: ')  # слово, на которое скрипт заменит найденное старое
-    new_data = []
-    edit_preset, del_preset = [], []
+    new_data, edit_preset, del_preset = [], [], []
     mine()
