@@ -49,7 +49,6 @@ def request_v2(item: str) -> dict:
         session.headers['User-Agent'] = 'insomnia/2022.2.1'
         response = session.get(link, params=query)
         result = json.loads(response.text)
-        logger.debug(f'Результат проверки: {result}')
     return result
 
 
