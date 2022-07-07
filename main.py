@@ -13,6 +13,7 @@ def mine() -> None:
     '''Запишет два файла с отчетами в папку main_reports и измененный файл с пресетами presets.csv.'''
     make_dir()
     data = functions.read(file_name)
+    logger.debug(f'Прочитано {len(data)} строк')
     head = functions.head
     for line in data:
         if functions.search_word(old_word, line):
@@ -27,6 +28,7 @@ def mine() -> None:
 
     functions.head = head
     functions.write(file_name, new_data)
+    logger.debug(f'В файл {file_name} записано {len(new_data)} строк')
     logger.debug(f'Удалено {len(data) - len(new_data)} строк')
 
 
@@ -43,6 +45,7 @@ def analiz(line: str) -> int:
     1 - допоиск и онлайн поиск; 0 - остальное(бренд, каталог, пресет).'''
     query = line[1:line.index(')')]
     request_old = functions.request_v2(query)
+    logger.info(f'Проверка человеческого запроса: ({query})')
     request_new = functions.request_v2(query.replace(old_word, new_word))
     logger.info(f'old query: {request_old} | new query: {request_new}\n')
     if '_t0=' in request_new["query"]:
