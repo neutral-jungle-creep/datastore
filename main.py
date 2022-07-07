@@ -1,5 +1,5 @@
 '''
-DOCSTRING: Принимает название файла без расширения, строку, которую заменить, и строку, на которую заменить.
+DOCSTRING: Принимает путь к файлу с его именем без расширения, строку, которую заменить, и строку, на которую заменить.
 Если онлайн поиск или допоиск, правит имеющуюся запись, иначе удаляет запись.
 В папке main_reports хранятся отчеты: edit_preset - записи, которые будут отредактированы,
 del_preset - записи, которые будут удалены.
@@ -11,6 +11,7 @@ import os
 
 def mine() -> None:
     '''Запишет два файла с отчетами в папку main_reports и измененный файл с пресетами presets.csv.'''
+    make_dir()
     data = functions.read(file_name)
     head = functions.head
     for line in data:
@@ -27,6 +28,14 @@ def mine() -> None:
     functions.head = head
     functions.write(file_name, new_data)
     logger.debug(f'Удалено {len(data) - len(new_data)} строк')
+
+
+def make_dir() -> None:
+    '''Создаст папку с отчетами, если она не существует.'''
+    try:
+        os.mkdir('main_reports')
+    except Exception:
+        pass
 
 
 def analiz(line: str) -> int:
@@ -51,8 +60,7 @@ def report(word: list, old: dict, new: dict) -> None:
 
 if __name__ == '__main__':
     logger.add('logs.log')
-    os.mkdir('main_reports')
-    file_name = input('Название файла: ')  # название файла
+    file_name = input('Путь к файлу: ')  # путь к файлу C:\\Pепозиторий\\datastore-1\\indices\\presets
     old_word = input('Заменяемое слово: ')  # слово, которое будет искать скрипт в файле в колонке Query
     new_word = input('Новое слово: ')  # слово, на которое скрипт заменит найденное старое
     new_data, edit_preset, del_preset = [], [], []
