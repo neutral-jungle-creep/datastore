@@ -1,9 +1,9 @@
 '''
 DOCSTRING: Модуль c функциями для работы файлами датастора.
 '''
-from loguru import logger
 import requests
 import json
+import os
 
 
 def read(file: str) -> list:
@@ -36,18 +36,6 @@ def change_word(o_word: str, n_word: str, line: str) -> str:
     return new_line
 
 
-def request_v2(item: str) -> dict:
-    '''Примет строку с человеческим запросом. Вернет отчет по записи из ручки v2.'''
-    link = 'http://exactmatch-common.wbx-search-internal.svc.k8s.dataline/v2/search?'
-    query = {"query": item}
-
-    with requests.session() as session:
-        session.headers['User-Agent'] = 'insomnia/2022.2.1'
-        response = session.get(link, params=query)
-        result = json.loads(response.text)
-    return result
-
-
 def format_report(result) -> str:
     '''Примет результат из ручки. Вернет отформатированную строку для формирования отчета'''
     return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
@@ -64,3 +52,23 @@ def del_lines(word: str, data: list) -> list:
         else:
             counter_del += 1
     return new_data
+
+
+def make_dir(name: str) -> None:
+    '''Создаст папку, если она не существует.'''
+    try:
+        os.mkdir(f'{name}')
+    except Exception:
+        pass
+
+
+def request_v2(item: str) -> dict:
+    '''Примет строку с человеческим запросом. Вернет отчет по записи из ручки v2.'''
+    link = 'http://exactmatch-common.wbx-search-internal.svc.k8s.dataline/v2/search?'
+    query = {"query": item}
+
+    with requests.session() as session:
+        session.headers['User-Agent'] = 'insomnia/2022.2.1'
+        response = session.get(link, params=query)
+        result = json.loads(response.text)
+    return result
