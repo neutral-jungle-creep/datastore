@@ -14,15 +14,10 @@ def main() -> None:
         if functions.search_word(old_word, line):
             request_old = query
             request_new = query.replace(old_word, new_word)
-            new_data.append(f'{format_result(functions.request_v2(request_old))}|'
-                            f'{format_result(functions.request_v2(request_new))}\n')
+            new_data.append(f'{functions.format_report(functions.request_v2(request_old))}|'
+                            f'{functions.format_report(functions.request_v2(request_new))}\n')
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
     functions.write(f'v2_change_{file_name}', new_data)
-
-
-def format_result(result) -> str:
-    '''Примет результат из ручки. Вернет отформатированную строку для формирования отчета'''
-    return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
 
 
 if __name__ == '__main__':
