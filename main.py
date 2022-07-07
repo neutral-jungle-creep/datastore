@@ -6,12 +6,11 @@ del_preset - записи, которые будут удалены.
 '''
 import functions
 from loguru import logger
-import os
 
 
 def mine() -> None:
     '''Запишет два файла с отчетами в папку main_reports и измененный файл с пресетами presets.csv.'''
-    make_dir()
+    functions.make_dir('main_reports')
     data = functions.read(file_name)
     logger.debug(f'Прочитано {len(data)} строк')
     head = functions.head
@@ -30,14 +29,6 @@ def mine() -> None:
     functions.write(file_name, new_data)
     logger.debug(f'В файл {file_name} записано {len(new_data)} строк')
     logger.debug(f'Удалено {len(data) - len(new_data)} строк')
-
-
-def make_dir() -> None:
-    '''Создаст папку с отчетами, если она не существует.'''
-    try:
-        os.mkdir('main_reports')
-    except Exception:
-        pass
 
 
 def analiz(line: str) -> int:
