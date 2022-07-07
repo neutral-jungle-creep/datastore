@@ -29,17 +29,17 @@ def mine() -> None:
 
 def analiz(line: str) -> int:
     '''Примет строку из коллекции с данными. Вернет код результата полученный из ручки v2 по запросу с новым словом.
-    0 - допоиск и онлайн поиск; 1 - остальное(бренд, каталог, пресет).'''
+    1 - допоиск и онлайн поиск; 0 - остальное(бренд, каталог, пресет).'''
     query = line[1:line.index(')')]
     request_old = functions.request_v2(query)
     request_new = functions.request_v2(query.replace(old_word, new_word))
     logger.info(f'old query: {request_old} | new query: {request_new}\n')
     if '_t0=' in request_new["query"]:
         report(edit_preset, request_old, request_new)
-        return 0
+        return 1
     else:
         report(del_preset, request_old, request_new)
-        return 1
+        return 0
 
 
 def report(word: list, old: dict, new: dict) -> None:
