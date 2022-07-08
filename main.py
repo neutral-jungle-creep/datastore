@@ -16,10 +16,10 @@ def mine() -> None:
     logger.debug(f'Прочитано {len(data)} строк')
     head = functions.head
     for line in data:
-        value = functions.search_word(old_words, line)
-        if value[0]:
-            if analiz(value[1], line):
-                new_data.append(functions.change_word(value[1], new_word, line))
+        response_search_word = functions.search_word(old_words, line)
+        if response_search_word[0]:
+            if analiz(response_search_word[1], line):
+                new_data.append(functions.change_word(response_search_word[1], new_word, line))
         else:
             new_data.append(line)
 
