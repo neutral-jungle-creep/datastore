@@ -25,5 +25,5 @@ def main(words: list[str]) -> None:
 if __name__ == '__main__':
     logger.add('logs.log')
     file_name = input('Путь к файлу: ')  # путь к файлу C:\\Pепозиторий\\datastore-1\\indices\\presets
-    words_search = input('Слово: ').split()  # слова, которые будет искать скрипт в файле в колонке Query
+    words_search = input('Слова: ').split()  # слова, которые будет искать скрипт в файле в колонке Query
     main(words_search)
