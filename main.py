@@ -1,29 +1,31 @@
 '''
 DOCSTRING: Принимает путь к файлу с его именем без расширения, строку, которую заменить, и строку, на которую заменить.
 Если онлайн поиск или допоиск, правит имеющуюся запись, иначе удаляет запись.
-В папке main_reports хранятся отчеты: edit_preset - записи, которые будут отредактированы,
-del_preset - записи, которые будут удалены.
+В папке main_reports хранятся отчеты: edit_preset_{new_word} - записи, которые будут отредактированы,
+del_preset_{new_word} - записи, которые будут удалены.
 '''
 import functions
 from loguru import logger
 
 
 def mine() -> None:
-    '''Запишет два файла с отчетами в папку main_reports и измененный файл с пресетами presets.csv.'''
+    '''Запишет два файла с отчетами в папку reports_main и перепишет файл в папке датастора по введенному
+     в начале программы пути.'''
     functions.make_dir('reports_main')
     data = functions.read(file_name)
     logger.debug(f'Прочитано {len(data)} строк')
     head = functions.head
     for line in data:
-        if functions.search_word(old_word, line):
-            if analiz(line):
-                new_data.append(functions.change_word(old_word, new_word, line))
+        value = functions.search_word(old_words, line)
+        if value[0]:
+            if analiz(value[1], line):
+                new_data.append(functions.change_word(value[1], new_word, line))
         else:
             new_data.append(line)
 
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
-    functions.write(f'C:\\CodePy\\wb\\datastore\\reports_main\\edit_preset_{old_word}', edit_preset)
-    functions.write(f'C:\\CodePy\\wb\\datastore\\reports_main\\del_preset_{old_word}', del_preset)
+    functions.write(f'C:\\CodePy\\wb\\datastore\\reports_main\\edit_preset_{new_word}', edit_preset)
+    functions.write(f'C:\\CodePy\\wb\\datastore\\reports_main\\del_preset_{new_word}', del_preset)
 
     functions.head = head
     functions.write(file_name, new_data)
@@ -31,9 +33,9 @@ def mine() -> None:
     logger.debug(f'Удалено {len(data) - len(new_data)} строк')
 
 
-def analiz(line: str) -> int:
-    '''Примет строку из коллекции с данными. Вернет код результата полученный из ручки v2 по запросу с новым словом.
-    1 - допоиск и онлайн поиск; 0 - остальное(бренд, каталог, пресет).'''
+def analiz(old_word: str, line: str) -> int:
+    '''Примет неверное слово и строку из коллекции с данными. Вернет код результата полученный из ручки v2 по
+    запросу с новым словом. 1 - допоиск и онлайн поиск; 0 - остальное(бренд, каталог, пресет).'''
     query = line.split('|')[0].replace(')', '').replace('(', '')
     logger.info(f'Проверка человеческого запроса: ({query})')
     request_old = functions.request_v2(query)
@@ -55,7 +57,7 @@ def report(word: list, old: dict, new: dict) -> None:
 if __name__ == '__main__':
     logger.add('logs.log')
     file_name = input('Путь к файлу: ')  # путь к файлу C:\\Pепозиторий\\datastore-1\\indices\\presets
-    old_word = input('Заменяемое слово: ')  # слово, которое будет искать скрипт в файле в колонке Query
+    old_words = input('Заменяемое слово: ').split()  # слово, которое будет искать скрипт в файле в колонке Query
     new_word = input('Новое слово: ')  # слово, на которое скрипт заменит найденное старое
     new_data, edit_preset, del_preset = [], [], []
     mine()
