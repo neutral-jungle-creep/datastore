@@ -5,18 +5,21 @@ DOCSTRING: Ищет записи с введенной подстрокой в �
 '''
 from loguru import logger
 import functions
+from pathlib import Path
 
 
 def main(word: str) -> None:
     '''Запишет в файл с именем 'search_word_{word}.csv строки с введенным словом.'''
+    functions.make_dir('reports_search')
     data = functions.read(file_name)
     new_data = []
     for line in data:
         if functions.search_word(word, line):
             new_data.append(line)
             logger.info(f'запрос, прошедший проверку: {line[:line.index(")") + 1]}')
-    functions.write(f'search_word_{word}', new_data)
-    logger.debug(f'В файл search_word_{word} записано {len(new_data)} строк')
+    name = '_'.join(file_name.split('\\')[-3::2])
+    functions.write(f'reports_search\\{name}_{word}', new_data)
+    logger.debug(f'В файл {name}_{word} записано {len(new_data)} строк')
 
 
 if __name__ == '__main__':
