@@ -4,6 +4,7 @@ DOCSTRING: Модуль c функциями для работы файлами 
 import requests
 import json
 import os
+from typing import Union
 
 
 def read(file: str) -> list:
@@ -22,11 +23,14 @@ def write(file: str, data: list) -> None:
         file_output.writelines(data)
 
 
-def search_word(word: str, line: str) -> bool:
-    '''Примет слово и строку. Вернет булево значение в зависимости от наличия полученной строки
-     в человеческом запросе'''
+def search_word(words: list[str], line: str) -> Union[bool, str] or bool:
+    '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в человеческом запросе,
+    иначе вернет ложь'''
     query = line.split('|')[0].split()
-    return word in query or word+')' in query or '('+word in query or '('+word+')' in query
+    for word in words:
+        if word in query or word+')' in query or '('+word in query or '('+word+')' in query:
+            return True, word
+    return False
 
 
 def change_word(o_word: str, n_word: str, line: str) -> str:
