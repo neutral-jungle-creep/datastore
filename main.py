@@ -10,7 +10,7 @@ from loguru import logger
 
 def mine() -> None:
     '''Запишет два файла с отчетами в папку main_reports и измененный файл с пресетами presets.csv.'''
-    functions.make_dir('main_reports')
+    functions.make_dir('reports_main')
     data = functions.read(file_name)
     logger.debug(f'Прочитано {len(data)} строк')
     head = functions.head
@@ -22,8 +22,8 @@ def mine() -> None:
             new_data.append(line)
 
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
-    functions.write(f'C:\\CodePy\\wb\\datastore\\main_reports\\edit_preset_{old_word}', edit_preset)
-    functions.write(f'C:\\CodePy\\wb\\datastore\\main_reports\\del_preset_{old_word}', del_preset)
+    functions.write(f'C:\\CodePy\\wb\\datastore\\reports_main\\edit_preset_{old_word}', edit_preset)
+    functions.write(f'C:\\CodePy\\wb\\datastore\\reports_main\\del_preset_{old_word}', del_preset)
 
     functions.head = head
     functions.write(file_name, new_data)
@@ -34,7 +34,7 @@ def mine() -> None:
 def analiz(line: str) -> int:
     '''Примет строку из коллекции с данными. Вернет код результата полученный из ручки v2 по запросу с новым словом.
     1 - допоиск и онлайн поиск; 0 - остальное(бренд, каталог, пресет).'''
-    query = line[1:line.index(')')]
+    query = line.split('|')[0].replace(')', '').replace('(', '')
     logger.info(f'Проверка человеческого запроса: ({query})')
     request_old = functions.request_v2(query)
     request_new = functions.request_v2(query.replace(old_word, new_word))
