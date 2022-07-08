@@ -30,7 +30,7 @@ def search_word(words: list[str], line: str) -> Union[bool, str] or bool:
     for word in words:
         if word in query or word+')' in query or '('+word in query or '('+word+')' in query:
             return True, word
-    return False
+    return False,
 
 
 def change_word(o_word: str, n_word: str, line: str) -> str:
