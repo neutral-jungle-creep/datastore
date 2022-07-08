@@ -64,7 +64,7 @@ def make_dir(name: str) -> None:
 
 def request_v2(item: str) -> dict:
     '''Примет строку с человеческим запросом. Вернет отчет по записи из ручки v2.'''
-    link = 'http://exactmatch-common.wbx-search-internal.svc.k8s.dataline/v2/search?'
+    link = 'http://exactmatch-common.wbxsearch-internal.svc.k8s.wbxsearch-dp/v2/search?'
     query = {"query": item}
 
     with requests.session() as session:
