@@ -25,8 +25,8 @@ def write(file: str, data: list) -> None:
 def search_word(word: str, line: str) -> bool:
     '''Примет слово и строку. Вернет булево значение в зависимости от наличия полученной строки
      в человеческом запросе'''
-    query = line[1:line.index(')')].split()
-    return word in query
+    query = line.split('|')[0].split()
+    return word in query or word+')' in query or '('+word in query or '('+word+')' in query
 
 
 def change_word(o_word: str, n_word: str, line: str) -> str:
