@@ -1,14 +1,15 @@
 '''
 DOCSTRING: Ищет записи, имеющие в человеческом запросе хотя бы одно из списка введенных слов.
 Принимает название файла без расширения и список слов для поиска через пробел.
-Записывает в папку reports_search файл {dir}_{file_name}_{words[0]}.csv, содержащий только выбранные строки.
+Записывает в папку reports_search файл {file_name}_{words[0]}.csv, содержащий только выбранные строки.
 '''
 from loguru import logger
 import functions
+from pathlib import Path
 
 
 def main(words: list[str]) -> None:
-    '''Запишет в файл с именем 'search_word_{words[0]}.csv строки с введенными словами.'''
+    '''Запишет в файл с именем '{file_name}_{words[0]}.csv строки с введенными словами.'''
     functions.make_dir('reports_search')
     data = functions.read(file_name)
     new_data = []
@@ -18,7 +19,7 @@ def main(words: list[str]) -> None:
             new_data.append(line)
             logger.info(f'запрос, прошедший проверку: {line.split("|")[0]}')
     name = '_'.join(file_name.split('\\')[-3::2])
-    functions.write(f'reports_search\\{name}_{words[0]}', new_data)
+    functions.write(Path('reports_search', f'{name}_{words[0]}'), new_data)
     logger.debug(f'В файл {name}_{words[0]} записано {len(new_data)} строк')
 
 
