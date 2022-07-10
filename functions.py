@@ -24,10 +24,10 @@ def write(file: Path or str, data: list) -> None:
         file_output.writelines(data)
 
 
-def search_word(words: list[str], line: str) -> Union[bool, str] or bool:
+def search_word(words: list[str], query: str) -> Union[bool, str] or bool:
     '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в человеческом запросе,
     иначе вернет ложь'''
-    query = line.split('|')[0].split()
+    query = query.split()
     for word in words:
         if word in query or word+')' in query or '('+word in query or '('+word+')' in query:
             return True, word
