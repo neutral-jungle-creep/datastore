@@ -41,12 +41,12 @@ def change_word(o_word: str, n_word: str, line: str) -> str:
     return new_line
 
 
-def format_report(result: json) -> str:
+def format_report(result: dict) -> str:
     '''Примет результат из ручки. Вернет отформатированную строку для формирования отчета'''
     return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
 
 
-def del_lines(word: str, data: list) -> list:
+def del_lines(word: list, data: list) -> list:
     '''Примет строку - слово, строки с которым в человеческом запросе нужно удалить из датастора.
     Вернет коллекцию строк.'''
     new_data = []
@@ -70,7 +70,7 @@ def make_dir(name: str) -> None:
 def request_v2(item: str) -> dict:
     '''Примет строку с человеческим запросом. Вернет отчет по записи из ручки v2.'''
     link = 'http://exactmatch-common.wbxsearch-internal.svc.k8s.wbxsearch-dp/v2/search?'
-    query = {"query": item}
+    query = {"query": item.replace(')', '').replace('(', '')}
 
     with requests.session() as session:
         session.headers['User-Agent'] = 'insomnia/2022.2.1'
