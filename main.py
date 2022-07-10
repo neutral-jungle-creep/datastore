@@ -37,7 +37,7 @@ def analiz(old_word: str, line: str) -> int:
     '''Примет неверное слово и строку из коллекции с данными файла датастора. Вернет код результата
     полученный из ручки v2 по запросу с новым словом. 1 - допоиск и онлайн поиск;
     0 - остальное(бренд, каталог, пресет).'''
-    query = line.split('|')[0].replace(')', '').replace('(', '')
+    query = line.split('|')[0]
     logger.info(f'Проверка человеческого запроса: ({query})')
     request_old = functions.request_v2(query)
     request_new = functions.request_v2(query.replace(old_word, new_word))
