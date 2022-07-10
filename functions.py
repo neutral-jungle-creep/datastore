@@ -41,7 +41,7 @@ def change_word(o_word: str, n_word: str, line: str) -> str:
     return new_line
 
 
-def format_report(result) -> str:
+def format_report(result: json) -> str:
     '''Примет результат из ручки. Вернет отформатированную строку для формирования отчета'''
     return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
 
