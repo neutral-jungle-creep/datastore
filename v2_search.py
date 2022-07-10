@@ -1,6 +1,6 @@
 '''
-DOCSTRING: Создает отчет о выдаче человеческого запроса с введенным словом и при его изменении.
-Принимает список строк с заменяемыми словами и строку со словом на которое требуется их заменить.
+DOCSTRING:Принимает список строк с заменяемыми словами и строку со словом на которое требуется их заменить.
+Создает отчет о выдаче человеческого запроса с введенным словом и при его изменении.
 Может быть использована как импортируемый модуль.
 '''
 from loguru import logger
@@ -8,7 +8,7 @@ import functions
 from pathlib import Path
 
 
-def make_v2_report(file: str, o_words: list[str], n_word: str) -> None:
+def v2_change_word_report(file: str, o_words: list[str], n_word: str) -> None:
     '''Запишет в файлы результаты выдачи до и после изменения слова в человеческом запросе.'''
     new_data = []
     functions.make_dir('reports_v2_search')
@@ -22,7 +22,7 @@ def make_v2_report(file: str, o_words: list[str], n_word: str) -> None:
             new_data.append(f'{functions.format_report(functions.request_v2(request_old))}|'
                             f'{functions.format_report(functions.request_v2(request_new))}\n')
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
-    functions.write(Path('reports_v2_search', f'v2_{n_word}'), new_data)
+    functions.write(Path('reports_v2_search', functions.format_report_name(file, o_words)), new_data)
     logger.debug(f'В файл v2_{n_word} записано {len(new_data)} строк')
 
 
@@ -31,7 +31,7 @@ def main():
     file_name = input('Название файла: ')
     old_words = input('Заменяемые слова: ').split()  # слова, которые будет искать скрипт в файле в колонке Query
     new_word = input('Новое слово: ')  # слово, на которое скрипт заменит найденное старое
-    make_v2_report(file_name, old_words, new_word)
+    v2_change_word_report(file_name, old_words, new_word)
 
 
 if __name__ == '__main__':
