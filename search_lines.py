@@ -8,24 +8,27 @@ import functions
 from pathlib import Path
 
 
-def main(words: list[str]) -> None:
+def search_lines_report(file: str, words: list[str]) -> None:
     '''Запишет в файл с именем '{file_name}_{words}.csv строки с введенными словами.'''
     functions.make_dir('reports_search')
-    data = functions.read(file_name)
+    data = functions.read(file)
     new_data = []
     for line in data:
-        result_search_word = functions.search_word(words, line)
+        query = line.split("|")[0]
+        result_search_word = functions.search_word(words, query)
         if result_search_word[0]:
             new_data.append(line)
-            logger.info(f'запрос, прошедший проверку: {line.split("|")[0]}')
-    name = '_'.join(file_name.split('\\')[-3::2])
-    word = '_'.join([word for word in words])
-    functions.write(Path('reports_search', f'{name}_{word}.csv'), new_data)
-    logger.debug(f'В файл {name}_{word} записано {len(new_data)} строк')
+            logger.info(f'запрос, прошедший проверку: {query}')
+    functions.write(Path('reports_search', name := functions.format_report_name(file, words)), new_data)
+    logger.debug(f'В файл {name} записано {len(new_data)} строк')
+
+
+def main():
+    logger.add('logs.log')
+    file_name = input('Путь к файлу: ')  # путь к файлу
+    words_search = input('Слова: ').split()  # слова, которые будет искать скрипт в файле в колонке Query
+    search_lines_report(file_name, words_search)
 
 
 if __name__ == '__main__':
-    logger.add('logs.log')
-    file_name = input('Путь к файлу: ')  # путь к файлу C:\\Pепозиторий\\datastore-1\\indices\\presets
-    words_search = input('Слова: ').split()  # слова, которые будет искать скрипт в файле в колонке Query
-    main(words_search)
+    main()
