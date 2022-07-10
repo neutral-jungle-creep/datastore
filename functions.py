@@ -4,7 +4,6 @@ DOCSTRING: Модуль c функциями для работы файлами 
 import requests
 import json
 import os
-from typing import Union
 from pathlib import Path
 
 
@@ -24,7 +23,7 @@ def write(file: Path or str, data: list) -> None:
         file_output.writelines(data)
 
 
-def search_word(words: list[str], query: str) -> Union[bool, str] or bool:
+def search_word(words: list[str], query: str) -> tuple[bool, str] or bool:
     '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в человеческом запросе,
     иначе вернет ложь'''
     query = query.split()
@@ -65,6 +64,12 @@ def make_dir(name: str) -> None:
         os.mkdir(f'{name}')
     except Exception:
         pass
+
+
+def format_report_name(file: str, words: list[str]) -> str:
+    '''Сформирует имя файла для отчетов.'''
+    name, word = '_'.join(file.split('\\')[-3::2]), '_'.join([word for word in words])
+    return f'{name}_{word}.csv'[:100]
 
 
 def request_v2(item: str) -> dict:
