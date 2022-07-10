@@ -22,8 +22,8 @@ def v2_change_word_report(file: str, o_words: list[str], n_word: str) -> None:
             new_data.append(f'{functions.format_report(functions.request_v2(request_old))}|'
                             f'{functions.format_report(functions.request_v2(request_new))}\n')
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
-    functions.write(Path('reports_v2_search', functions.format_report_name(file, o_words)), new_data)
-    logger.debug(f'В файл v2_{n_word} записано {len(new_data)} строк')
+    functions.write(Path('reports_v2_search', name := functions.format_report_name(file, o_words)), new_data)
+    logger.debug(f'В файл {name} записано {len(new_data)} строк')
 
 
 def main():
