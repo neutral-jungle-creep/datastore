@@ -5,6 +5,7 @@ import requests
 import json
 import os
 from typing import Union
+from pathlib import Path
 
 
 def read(file: str) -> list:
@@ -16,9 +17,9 @@ def read(file: str) -> list:
     return data
 
 
-def write(file: str, data: list) -> None:
-    '''Примет строку - название файла и список строк с данными. Запишет список построчно в файл.'''
-    with open(f'{file}.csv', 'w', encoding='utf-8') as file_output:
+def write(file: Path or str, data: list) -> None:
+    '''Примет название файла и список строк с данными. Запишет список построчно в файл.'''
+    with open(file, 'w', encoding='utf-8') as file_output:
         file_output.write(head)
         file_output.writelines(data)
 
