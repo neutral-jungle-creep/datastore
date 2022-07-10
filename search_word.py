@@ -14,8 +14,8 @@ def main(words: list[str]) -> None:
     data = functions.read(file_name)
     new_data = []
     for line in data:
-        response_search_word = functions.search_word(words, line)
-        if response_search_word[0]:
+        result_search_word = functions.search_word(words, line)
+        if result_search_word[0]:
             new_data.append(line)
             logger.info(f'запрос, прошедший проверку: {line.split("|")[0]}')
     name = '_'.join(file_name.split('\\')[-3::2])
