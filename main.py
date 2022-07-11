@@ -30,7 +30,7 @@ def main() -> None:
     functions.add_lines(Path('logs', 'new_logs.txt'), for_check)
 
     functions.head = head
-    functions.write(file_name, new_data)
+    functions.write(f'{file_name}.csv', new_data)
     logger.debug(f'В файл {file_name} записано {len(new_data)} строк')
     logger.debug(f'Удалено {len(data) - len(new_data)} строк, отредактировано {len(edit_preset)} строк.')
 
