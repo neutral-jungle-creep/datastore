@@ -12,7 +12,7 @@ def v2_change_word_report(file: str, o_words: list[str], n_word: str) -> None:
     '''Запишет в файлы результаты выдачи до и после изменения слова в человеческом запросе.'''
     new_data = []
     functions.make_dir('reports_v2_search')
-    data = functions.read(file)[:-1]  # убрать последнюю пустую строку
+    data = functions.read(f'{file}.csv')[:-1]  # убрать последнюю пустую строку
     for line in data:
         query = line.split("|")[0]
         result_search_word = functions.search_word(o_words, query)

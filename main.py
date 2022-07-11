@@ -13,7 +13,7 @@ def main() -> None:
     '''Запишет два файла с отчетами в папку reports_main и перепишет файл в директории датастора по введенному
      в начале программы пути.'''
     functions.make_dir('reports_main', 'logs')
-    data = functions.read(file_name)
+    data = functions.read(f'{file_name}.csv')
     logger.debug(f'Прочитано {len(data)} строк')
     head = functions.head
     for line in data:

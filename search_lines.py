@@ -12,7 +12,7 @@ def search_lines_report(file: str, words: list[str]) -> None:
     '''Запишет в файл с именем '{file_name}_{words}.csv строки с введенными словами.'''
     new_data = []
     functions.make_dir('reports_search')
-    data = functions.read(file)
+    data = functions.read(f'{file}.csv')
     for line in data:
         query = line.split("|")[0]
         result_search_word = functions.search_word(words, query)

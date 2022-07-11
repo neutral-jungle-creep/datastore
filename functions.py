@@ -9,7 +9,7 @@ from pathlib import Path
 
 def read(file: str) -> list:
     '''Примет строку - название файла. Вернет список строк из файла без строки заголовка.'''
-    with open(f'{file}.csv', 'r', encoding='utf-8') as file_input:
+    with open(file, 'r', encoding='utf-8') as file_input:
         global head
         head = file_input.readline()
         data = file_input.readlines()
