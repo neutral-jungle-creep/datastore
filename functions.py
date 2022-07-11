@@ -32,11 +32,9 @@ def add_lines(file: Path or str, data: list) -> None:
 def search_word(words: list[str], line: str) -> tuple[bool, str] or bool:
     '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в
     человеческом запросе или в квери, иначе вернет ложь'''
-    human_request = line.split('|')[0]
-    query = search_query(line)
-
+    request, query = human_request(line), query_arg(line)
     for word in words:
-        if word in line or word+')' in line or '('+word in line or '('+word+')' in line:
+        if word in request or word in query:
             return True, word
     return False,
 
@@ -45,8 +43,13 @@ def search_some_words(words: list[str], line):
     ''''''
 
 
-def search_query(line: str) -> list[str]:
-    '''Примет строку из датастора. Вернет список строк, находящихся в mainers_args query.'''
+def human_request(line: str) -> list[str]:
+    '''Примет строку из датастора. Вернет список слов находящихся в Search Query.'''
+    return line.split('|')[0].replace(')', '').replace('(', '').split()
+
+
+def query_arg(line: str) -> list[str]:
+    '''Примет строку из датастора. Вернет список слов, находящихся в Miner's args query.'''
     miner_args = line.split('|')[6].split()
     try:
         for arg in miner_args:
