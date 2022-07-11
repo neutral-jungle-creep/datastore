@@ -23,7 +23,7 @@ def write(file: Path or str, data: list) -> None:
         file_output.writelines(data)
 
 
-def add_lines(file: Path, data: list) -> None:
+def add_lines(file: Path or str, data: list) -> None:
     '''Примет название файла и список строк с данными. Запишет список построчно в конец файла.'''
     with open(file, 'a', encoding='utf-8') as file_output:
         file_output.writelines(data)

@@ -27,9 +27,9 @@ def main() -> None:
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
     functions.write(Path('reports_main', functions.format_report_name(f'{file_name}_edit', old_words)), edit_preset)
     functions.write(Path('reports_main', functions.format_report_name(f'{file_name}_del', old_words)), del_preset)
-    functions.add_lines(Path('logs', 'new_logs.txt'), for_check)
 
     functions.head = head
+    functions.add_lines(Path('logs', 'new_logs.txt'), for_check)
     functions.write(f'{file_name}.csv', new_data)
     logger.debug(f'В файл {file_name} записано {len(new_data)} строк')
     logger.debug(f'Удалено {len(data) - len(new_data)} строк, отредактировано {len(edit_preset)} строк.')
@@ -40,7 +40,7 @@ def analiz(old_word: str, line: str) -> int:
     полученный из ручки v2 по запросу с новым словом. 1 - допоиск и онлайн поиск;
     0 - остальное(бренд, каталог, пресет).'''
     query = line.split('|')[0]
-    for_check.append(query)
+    for_check.append(line)
     logger.info(f'Проверка человеческого запроса: {query}')
     request_old, request_new = functions.request_v2(query), functions.request_v2(query.replace(old_word, new_word))
     logger.info(f'old query: {request_old} | new query: {request_new}\n')
