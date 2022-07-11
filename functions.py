@@ -64,12 +64,13 @@ def del_lines(word: list, data: list) -> list:
     return new_data
 
 
-def make_dir(name: str) -> None:
+def make_dir(*args: str) -> None:
     '''Создаст папку, если она не существует.'''
-    try:
-        os.mkdir(f'{name}')
-    except Exception:
-        pass
+    for name in args:
+        try:
+            os.mkdir(f'{name}')
+        except Exception:
+            pass
 
 
 def format_report_name(file: str, words: list[str]) -> str:
