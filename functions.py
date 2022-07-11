@@ -29,14 +29,31 @@ def add_lines(file: Path or str, data: list) -> None:
         file_output.writelines(data)
 
 
-def search_word(words: list[str], query: str) -> tuple[bool, str] or bool:
-    '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в человеческом запросе,
-    иначе вернет ложь'''
-    query = query.split()
+def search_word(words: list[str], line: str) -> tuple[bool, str] or bool:
+    '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в
+    человеческом запросе или в квери, иначе вернет ложь'''
+    human_request = line.split('|')[0]
+    query = search_query(line)
+
     for word in words:
-        if word in query or word+')' in query or '('+word in query or '('+word+')' in query:
+        if word in line or word+')' in line or '('+word in line or '('+word+')' in line:
             return True, word
     return False,
+
+
+def search_some_words(words: list[str], line):
+    ''''''
+
+
+def search_query(line: str) -> list[str]:
+    '''Примет строку из датастора. Вернет список строк, находящихся в mainers_args query.'''
+    miner_args = line.split('|')[6].split()
+    try:
+        for arg in miner_args:
+            if '--query=' in arg:
+                return arg[arg.index('"'):-1].split()
+    except Exception:
+        return miner_args
 
 
 def change_word(o_word: str, n_word: str, line: str) -> str:
