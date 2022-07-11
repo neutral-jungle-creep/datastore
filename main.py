@@ -12,7 +12,7 @@ from pathlib import Path
 def main() -> None:
     '''Запишет два файла с отчетами в папку reports_main и перепишет файл в директории датастора по введенному
      в начале программы пути.'''
-    functions.make_dir('reports_main')
+    functions.make_dir('reports_main', 'logs')
     data = functions.read(file_name)
     logger.debug(f'Прочитано {len(data)} строк')
     head = functions.head
@@ -23,11 +23,12 @@ def main() -> None:
                 new_data.append(functions.change_word(result_search_word[1], new_word, line))
         else:
             new_data.append(line)
-    # запись отчетов
+
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
     functions.write(Path('reports_main', functions.format_report_name(f'{file_name}_edit', old_words)), edit_preset)
     functions.write(Path('reports_main', functions.format_report_name(f'{file_name}_del', old_words)), del_preset)
-    # перезапись файла в директории датастора
+    functions.add_lines(Path('logs', 'new_logs.txt'), for_check)
+
     functions.head = head
     functions.write(file_name, new_data)
     logger.debug(f'В файл {file_name} записано {len(new_data)} строк')
@@ -39,6 +40,7 @@ def analiz(old_word: str, line: str) -> int:
     полученный из ручки v2 по запросу с новым словом. 1 - допоиск и онлайн поиск;
     0 - остальное(бренд, каталог, пресет).'''
     query = line.split('|')[0]
+    for_check.append(query)
     logger.info(f'Проверка человеческого запроса: {query}')
     request_old, request_new = functions.request_v2(query), functions.request_v2(query.replace(old_word, new_word))
     logger.info(f'old query: {request_old} | new query: {request_new}\n')
@@ -60,7 +62,7 @@ if __name__ == '__main__':
     file_name = input('Путь к файлу: ')  # путь к файлу
     old_words = input('Заменяемое слово: ').split()  # слова, которые будет искать скрипт в файле в колонке Query
     new_word = input('Новое слово: ')  # слово, на которое скрипт заменит найденное старое
-    new_data, edit_preset, del_preset = [], [], []
+    new_data, edit_preset, del_preset, for_check = [], [], [], []
     main()
 else:
     print('Модуль не используется как импортируемый!')
