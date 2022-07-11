@@ -32,7 +32,7 @@ def add_lines(file: Path or str, data: list) -> None:
 def search_word(words: list[str], line: str) -> tuple[bool, str] or bool:
     '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в
     человеческом запросе или в квери, иначе вернет ложь'''
-    request, query = human_request(line), query_arg(line)
+    request, query = human_request(line).replace(')', '').replace('(', '').split(), query_arg(line)
     for word in words:
         if word in request or word in query:
             return True, word
@@ -43,9 +43,9 @@ def search_some_words(words: list[str], line):
     ''''''
 
 
-def human_request(line: str) -> list[str]:
-    '''Примет строку из датастора. Вернет список слов находящихся в Search Query.'''
-    return line.split('|')[0].replace(')', '').replace('(', '').split()
+def human_request(line: str) -> str:
+    '''Примет строку из датастора. Часть строки в колонке Search Query.'''
+    return line.split('|')[0]
 
 
 def query_arg(line: str) -> list[str]:
@@ -60,9 +60,24 @@ def query_arg(line: str) -> list[str]:
 
 
 def change_word(o_word: str, n_word: str, line: str) -> str:
-    '''Примет заменяемое слово, новое слово и строку. Вернет строку с замененной подстрокой на новую.'''
-    new_line = line.replace(f'{o_word} ', f'{n_word} ').replace(f'{o_word})',
-                                                                f'{n_word})').replace(f'{o_word}"', f'{n_word}"')
+    '''Примет заменяемое слово, новое слово и строку. Вернет строку с замененной подстрокой на новую
+    в человеческом запросе и квери.'''
+    request, query = human_request(line).split(), query_arg(line)
+    new_request, new_query = [], []
+
+    for word in request:
+        if o_word == word.replace(')', '').replace('(', ''):
+            new_request.append(word.replace(o_word, n_word))
+        else:
+            new_request.append(word)
+
+    for word in query:
+        if o_word == word:
+            new_query.append(n_word)
+        else:
+            new_query.append(word)
+
+    new_line = line.replace(''.join(request), ''.join(new_request)).replace(''.join(query), ''.join(new_query))
     return new_line
 
 
