@@ -5,6 +5,7 @@ from loguru import logger
 def rewrite_file(file: str, data: list) -> None:
     ''''''
     functions.write(f'{file}.csv', data)
+    logger.debug(f'В файл {file} записано {len(data)} строк')
 
 
 def del_lines(file: str, words: list) -> list:
@@ -17,6 +18,7 @@ def del_lines(file: str, words: list) -> list:
             logger.debug(f'Удалена строка {line}')
         else:
             new_data.append(line)
+    logger.debug(f'Удалено {len(data) - len(new_data)} строк')
     return new_data
 
 
