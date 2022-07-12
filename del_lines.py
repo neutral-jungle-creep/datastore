@@ -12,11 +12,11 @@ def del_lines(file: str, words: list) -> list:
     '''Примет путь к файлу и список слов для поиска. Вернет коллекцию с данными датастора без выключенных
     строк, в которых есть хотя бы одно из списка слов.'''
     data = functions.read(f'{file}.csv')
+    logger.debug(f'Прочитано {len(data)} строк')
     new_data = []
     for line in data:
         if a := functions.search_word(words, line)[0] and 'no' == line.split('|')[2]:
-            logger.debug(a)
-            logger.debug(f'Удалена строка {line}')
+            logger.info(f'Удалена строка {line}')
         else:
             new_data.append(line)
     logger.debug(f'Удалено {len(data) - len(new_data)} строк')
