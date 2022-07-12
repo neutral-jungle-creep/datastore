@@ -44,7 +44,7 @@ def report(word: list, old: dict, new: dict) -> None:
 
 
 def main() -> None:
-    '''Прочитает указанный файл датастора, отредактирует или выклюяит указанные строки.'''
+    '''Прочитает указанный файл датастора, отредактирует или выключит указанные строки.'''
     functions.make_dir('reports_main', 'logs')
     data = functions.read(f'{file_name}.csv')
     logger.debug(f'Прочитано {len(data)} строк')
