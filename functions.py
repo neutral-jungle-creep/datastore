@@ -86,19 +86,6 @@ def format_report(result: dict) -> str:
     return f'{result["name"]}|{result["query"]}|{result["shardKey"]}'
 
 
-def del_lines(word: list, data: list) -> list:
-    '''Примет строку - слово, строки с которым в человеческом запросе нужно удалить из датастора.
-    Вернет коллекцию строк.'''
-    new_data = []
-    counter_del = 0
-    for line in data:
-        if not search_word(word, line):
-            new_data.append(line)
-        else:
-            counter_del += 1
-    return new_data
-
-
 def make_dir(*args: str) -> None:
     '''Создаст папку, если она не существует.'''
     for name in args:

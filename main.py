@@ -21,6 +21,8 @@ def main() -> None:
         if result_search_word[0]:
             if analiz(result_search_word[1], line):
                 new_data.append(functions.change_word(result_search_word[1], new_word, line))
+            else:
+                new_data.append(line.replace('|yes|', '|no|'))
         else:
             new_data.append(line)
 

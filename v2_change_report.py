@@ -11,7 +11,7 @@ from pathlib import Path
 def v2_change_word_report(file: str, o_words: list[str], n_word: str) -> None:
     '''Запишет в файлы результаты выдачи до и после изменения слова в человеческом запросе.'''
     new_data = []
-    functions.make_dir('reports_v2_search')
+    functions.make_dir('reports_v2_change')
     data = functions.read(f'{file}.csv')[:-1]  # убрать последнюю пустую строку
     for line in data:
         query = line.split("|")[0]
@@ -22,7 +22,7 @@ def v2_change_word_report(file: str, o_words: list[str], n_word: str) -> None:
             new_data.append(f'{functions.format_report(functions.request_v2(request_old))}|'
                             f'{functions.format_report(functions.request_v2(request_new))}\n')
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
-    functions.write(Path('reports_v2_search', name := functions.format_report_name(file, o_words)), new_data)
+    functions.write(Path('reports_v2_change', name := functions.format_report_name(file, o_words)), new_data)
     logger.debug(f'В файл {name} записано {len(new_data)} строк')
 
 
