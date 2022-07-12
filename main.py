@@ -21,6 +21,24 @@ def rewrite_file():
     functions.write(Path('reports_main', functions.format_report_name(f'{file_name}_del', old_words)), del_preset)
 
 
+def switch_brand(request_old: dict, request_new: dict) -> int:
+    ''''''
+    if brand:
+        if '_t0=' in request_new["query"]:
+            report(edit_preset, request_old, request_new)
+            return 1
+        else:
+            report(del_preset, request_old, request_new)
+            return 0
+    else:
+        if '_t0=' in request_new["query"] or 'brand' in request_new["query"]:
+            report(edit_preset, request_old, request_new)
+            return 1
+        else:
+            report(del_preset, request_old, request_new)
+            return 0
+
+
 def analiz(old_word: str, line: str) -> int:
     '''Примет неверное слово и строку из коллекции с данными файла датастора. Вернет код результата
     полученный из ручки v2 по запросу с новым словом. 1 - допоиск и онлайн поиск;
@@ -29,13 +47,7 @@ def analiz(old_word: str, line: str) -> int:
     for_check.append(line)
     logger.info(f'Проверка человеческого запроса: {query}')
     request_old, request_new = functions.request_v2(query), functions.request_v2(query.replace(old_word, new_word))
-    logger.info(f'old query: {request_old} | new query: {request_new}\n')
-    if '_t0=' in request_new["query"]:
-        report(edit_preset, request_old, request_new)
-        return 1
-    else:
-        report(del_preset, request_old, request_new)
-        return 0
+    return switch_brand(request_old, request_new)
 
 
 def report(word: list, old: dict, new: dict) -> None:
@@ -52,9 +64,11 @@ def main() -> None:
         result_search_word = functions.search_word(old_words, line)
         if result_search_word[0]:
             if analiz(result_search_word[1], line):
-                new_data.append(functions.change_word(result_search_word[1], new_word, line))
+                new_data.append(line := functions.change_word(result_search_word[1], new_word, line))
+                logger.info(f'Отредактированная строка - {line}')
             else:
-                new_data.append(line.replace('|yes|', '|no|'))
+                new_data.append(line := line.replace('|yes|', '|no|'))
+                logger.info(f'Выключенная строка - {line}')
         else:
             new_data.append(line)
     logger.debug(f'Выключено {len(del_preset)} строк, отредактировано {len(edit_preset)} строк.')
@@ -67,6 +81,7 @@ if __name__ == '__main__':
     old_words = input('Заменяемое слово: ').split()  # слова, которые будет искать скрипт в файле в колонке Query
     new_word = input('Новое слово: ')  # слово, на которое скрипт заменит найденное старое
     new_data, edit_preset, del_preset, for_check = [], [], [], []
+    brand = int(input('Выдается брендом? 1/0 '))
     main()
 else:
     print('Модуль не используется как импортируемый!')
