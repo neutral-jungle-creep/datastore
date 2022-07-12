@@ -14,7 +14,8 @@ def del_lines(file: str, words: list) -> list:
     data = functions.read(f'{file}.csv')
     new_data = []
     for line in data:
-        if functions.search_word(words,line) and 'no' == line.split('|'):
+        if a := functions.search_word(words, line)[0] and 'no' == line.split('|')[2]:
+            logger.debug(a)
             logger.debug(f'Удалена строка {line}')
         else:
             new_data.append(line)

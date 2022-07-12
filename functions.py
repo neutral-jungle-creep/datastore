@@ -5,6 +5,7 @@ import requests
 import json
 import os
 from pathlib import Path
+from loguru import logger
 
 
 def read(file: str) -> list:
@@ -53,9 +54,9 @@ def human_request(line: str) -> str:
 def query_arg(line: str) -> str:
     '''Примет строку из датастора. Вернет строку, находящуюся в колонке Miner's args в части query.'''
     miner_args = line.split('|')[6]
-    for arg in miner_args.split():
-        if '--query=' in arg:
-            return arg[arg.index('"'):-1]
+    for arg in miner_args.split('--'):
+        if 'query=' in arg:
+            return arg[arg.index('"') + 1:-1]
     return miner_args
 
 
@@ -77,7 +78,7 @@ def change_word(o_word: str, n_word: str, line: str) -> str:
         else:
             new_query.append(word)
 
-    new_line = line.replace(''.join(request), ''.join(new_request)).replace(''.join(query), ''.join(new_query))
+    new_line = line.replace(' '.join(request), ' '.join(new_request)).replace(' '.join(query), ' '.join(new_query))
     return new_line
 
 
