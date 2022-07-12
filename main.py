@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 def rewrite_file():
+    '''Перепишет файл датастора, запишет файлы: для проверки логов и два отчета.'''
     functions.write(f'{file_name}.csv', new_data)
     logger.debug(f'В файл {file_name} записано {len(new_data)} строк')
 
@@ -43,8 +44,7 @@ def report(word: list, old: dict, new: dict) -> None:
 
 
 def main() -> None:
-    '''Запишет два файла с отчетами в папку reports_main и перепишет файл в директории датастора по введенному
-     в начале программы пути.'''
+    '''Прочитает указанный файл датастора, отредактирует или выклюяит указанные строки.'''
     functions.make_dir('reports_main', 'logs')
     data = functions.read(f'{file_name}.csv')
     logger.debug(f'Прочитано {len(data)} строк')
