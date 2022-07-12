@@ -9,32 +9,15 @@ from loguru import logger
 from pathlib import Path
 
 
-def main() -> None:
-    '''Запишет два файла с отчетами в папку reports_main и перепишет файл в директории датастора по введенному
-     в начале программы пути.'''
-    functions.make_dir('reports_main', 'logs')
-    data = functions.read(f'{file_name}.csv')
-    logger.debug(f'Прочитано {len(data)} строк')
-    head = functions.head
-    for line in data:
-        result_search_word = functions.search_word(old_words, line)
-        if result_search_word[0]:
-            if analiz(result_search_word[1], line):
-                new_data.append(functions.change_word(result_search_word[1], new_word, line))
-            else:
-                new_data.append(line.replace('|yes|', '|no|'))
-        else:
-            new_data.append(line)
+def rewrite_file():
+    functions.write(f'{file_name}.csv', new_data)
+    logger.debug(f'В файл {file_name} записано {len(new_data)} строк')
+
+    functions.add_lines(Path('logs', 'new_logs.txt'), for_check)
 
     functions.head = 'name|query|shardKey|new name|new query|new shardKey\n'
     functions.write(Path('reports_main', functions.format_report_name(f'{file_name}_edit', old_words)), edit_preset)
     functions.write(Path('reports_main', functions.format_report_name(f'{file_name}_del', old_words)), del_preset)
-
-    functions.head = head
-    functions.add_lines(Path('logs', 'new_logs.txt'), for_check)
-    functions.write(f'{file_name}.csv', new_data)
-    logger.debug(f'В файл {file_name} записано {len(new_data)} строк')
-    logger.debug(f'Удалено {len(data) - len(new_data)} строк, отредактировано {len(edit_preset)} строк.')
 
 
 def analiz(old_word: str, line: str) -> int:
@@ -57,6 +40,25 @@ def analiz(old_word: str, line: str) -> int:
 def report(word: list, old: dict, new: dict) -> None:
     '''Примет название коллекции и два словаря с отчетами экзакта, добавит в коллекцию отформатированную строку'''
     word.append(f'{functions.format_report(old)}|{functions.format_report(new)}\n')
+
+
+def main() -> None:
+    '''Запишет два файла с отчетами в папку reports_main и перепишет файл в директории датастора по введенному
+     в начале программы пути.'''
+    functions.make_dir('reports_main', 'logs')
+    data = functions.read(f'{file_name}.csv')
+    logger.debug(f'Прочитано {len(data)} строк')
+    for line in data:
+        result_search_word = functions.search_word(old_words, line)
+        if result_search_word[0]:
+            if analiz(result_search_word[1], line):
+                new_data.append(functions.change_word(result_search_word[1], new_word, line))
+            else:
+                new_data.append(line.replace('|yes|', '|no|'))
+        else:
+            new_data.append(line)
+    logger.debug(f'Выключено {len(del_preset)} строк, отредактировано {len(edit_preset)} строк.')
+    rewrite_file()
 
 
 if __name__ == '__main__':
