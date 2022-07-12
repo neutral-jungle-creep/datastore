@@ -9,16 +9,15 @@ from pathlib import Path
 
 
 def search_lines_report(file: str, words: list[str]) -> None:
-    '''Запишет в файл с именем '{file_name}_{words}.csv строки с введенными словами.'''
+    '''Запишет в файл с именем {file_name}_{words}.csv строки с введенными словами.'''
     new_data = []
     functions.make_dir('reports_search')
     data = functions.read(f'{file}.csv')
     for line in data:
-        query = line.split("|")[0]
-        result_search_word = functions.search_word(words, query)
+        result_search_word = functions.search_word(words, line)
         if result_search_word[0]:
             new_data.append(line)
-            logger.info(f'запрос, прошедший проверку: {query}')
+            logger.info(f'запрос, прошедший проверку: {line}')
     functions.write(Path('reports_search', name := functions.format_report_name(file, words)), new_data)
     logger.debug(f'В файл {name} записано {len(new_data)} строк')
 
@@ -26,7 +25,7 @@ def search_lines_report(file: str, words: list[str]) -> None:
 def main():
     logger.add('logs.log')
     file_name = input('Путь к файлу: ')  # путь к файлу
-    words_search = input('Слова: ').split()  # слова, которые будет искать скрипт в файле в колонке Query
+    words_search = input('Слова: ').split()  # слова, которые будет искать скрипт в файле
     search_lines_report(file_name, words_search)
 
 

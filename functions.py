@@ -31,8 +31,8 @@ def add_lines(file: Path or str, data: list) -> None:
 
 def search_word(words: list[str], line: str) -> tuple[bool, str] or bool:
     '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в
-    человеческом запросе или в квери, иначе вернет ложь'''
-    request, query = human_request(line).replace(')', '').replace('(', '').split(), query_arg(line)
+    человеческом запросе или в квери, иначе вернет ложь.'''
+    request, query = human_request(line).replace(')', '').replace('(', '').split(), query_arg(line).split()
     for word in words:
         if word in request or word in query:
             return True, word
@@ -40,29 +40,29 @@ def search_word(words: list[str], line: str) -> tuple[bool, str] or bool:
 
 
 def search_some_words(words: list[str], line):
-    ''''''
+    '''Примет список из слов и строку. Вернет правду и слова, если они все есть в
+    человеческом запросе или в квери, иначе вернет ложь.'''
+    pass
 
 
 def human_request(line: str) -> str:
-    '''Примет строку из датастора. Часть строки в колонке Search Query.'''
+    '''Примет строку из датастора. Вернет строку, находящуюся в колонке Search Query.'''
     return line.split('|')[0]
 
 
-def query_arg(line: str) -> list[str]:
-    '''Примет строку из датастора. Вернет список слов, находящихся в Miner's args query.'''
-    miner_args = line.split('|')[6].split()
-    try:
-        for arg in miner_args:
-            if '--query=' in arg:
-                return arg[arg.index('"'):-1].split()
-    except Exception:
-        return miner_args
+def query_arg(line: str) -> str:
+    '''Примет строку из датастора. Вернет строку, находящуюся в колонке Miner's args в части query.'''
+    miner_args = line.split('|')[6]
+    for arg in miner_args.split():
+        if '--query=' in arg:
+            return arg[arg.index('"'):-1]
+    return miner_args
 
 
 def change_word(o_word: str, n_word: str, line: str) -> str:
     '''Примет заменяемое слово, новое слово и строку. Вернет строку с замененной подстрокой на новую
     в человеческом запросе и квери.'''
-    request, query = human_request(line).split(), query_arg(line)
+    request, query = human_request(line).split(), query_arg(line).split()
     new_request, new_query = [], []
 
     for word in request:
