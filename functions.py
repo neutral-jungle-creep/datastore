@@ -32,9 +32,9 @@ def add_lines(file: Path or str, data: list) -> None:
 def search_word(words: list[str], line: str) -> tuple[bool, str] or bool:
     '''Примет список из слов и строку. Вернет правду и слово из списка, если оно есть в
     человеческом запросе или в квери, иначе вернет ложь.'''
-    request, query = human_request(line).replace(')', '').replace('(', '').split(), query_arg(line).split()
+    request = human_request(line).replace(')', '').replace('(', '').split()
     for word in words:
-        if word in request or word in query:
+        if word in request:
             return True, word
     return False,
 
