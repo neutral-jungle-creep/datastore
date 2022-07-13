@@ -21,38 +21,55 @@ def rewrite_file():
     functions.write(Path('reports_main', functions.format_report_name(f'{file_name}_del', old_words)), del_preset)
 
 
-def switch_brand(request_old: dict, request_new: dict) -> int:
-    ''''''
+def switch_no_brand(v2_result: tuple) -> int:
+    query = v2_result[0]["query"]
     if brand:
-        if '_t0=' in request_new["query"]:
-            report(edit_preset, request_old, request_new)
+        if '_t0=' in query:
             return 1
         else:
-            report(del_preset, request_old, request_new)
             return 0
     else:
-        if '_t0=' in request_new["query"] or 'brand' in request_new["query"]:
-            report(edit_preset, request_old, request_new)
+        if '_t0=' in query or 'brand' in query:
             return 1
         else:
-            report(del_preset, request_old, request_new)
             return 0
 
 
-def analiz(old_word: str, line: str) -> int:
-    '''Примет неверное слово и строку из коллекции с данными файла датастора. Вернет код результата
-    полученный из ручки v2 по запросу с новым словом. 1 - допоиск и онлайн поиск;
-    0 - остальное(бренд, каталог, пресет).'''
-    query = line.split('|')[0]
-    for_check.append(line)
-    logger.info(f'Проверка человеческого запроса: {query}')
-    request_old, request_new = functions.request_v2(query), functions.request_v2(query.replace(old_word, new_word))
-    return switch_brand(request_old, request_new)
+def switch_yes_brand(v2_result: tuple) -> int:
+    query = v2_result[1]["query"]
+    if brand:
+        if '_t0=' in query:
+            return 1
+        else:
+            return 0
+    else:
+        if '_t0=' in query or 'brand' in query:
+            return 1
+        else:
+            return 0
 
 
-def report(word: list, old: dict, new: dict) -> None:
+def report_main(word: list, v2_result) -> None:
     '''Примет название коллекции и два словаря с отчетами экзакта, добавит в коллекцию отформатированную строку'''
-    word.append(f'{functions.format_report(old)}|{functions.format_report(new)}\n')
+    word.append(f'{functions.format_report(v2_result[0])}|{functions.format_report(v2_result[1])}\n')
+
+
+def switch(func, v2_result: tuple):
+    result = func(v2_result)
+    if result:
+        report_main(edit_preset, v2_result)
+    else:
+        report_main(del_preset, v2_result)
+    return result
+
+
+def v2_report(old_word: str, line: str) -> tuple:
+    '''Примет неверное слово и строку из коллекции с данными файла датастора. Вернет результаты,
+    полученные из ручки v2 по запросу со старым и новым словом.'''
+    query = functions.human_request(line)
+    for_check.append(line)
+    logger.info(f'Проверка строки: {line}')
+    return functions.request_v2(query), functions.request_v2(query.replace(old_word, new_word))
 
 
 def main() -> None:
@@ -63,12 +80,22 @@ def main() -> None:
     for line in data:
         result_search_word = functions.search_word(old_words, line)
         if result_search_word[0]:
-            if analiz(result_search_word[1], line):
-                new_data.append(line := functions.change_word(result_search_word[1], new_word, line))
-                logger.info(f'Отредактированная строка - {line}')
+            v2_result = v2_report(result_search_word[1], line)
+            if '|yes|' in line:
+                if switch(switch_yes_brand, v2_result):
+                    new_data.append(line := functions.change_word(result_search_word[1], new_word, line))
+                    logger.info(f'Отредактирована строка - {line}')
+                else:
+                    new_data.append(line := line.replace('|yes|', '|no|'))
+                    logger.info(f'Выключена строка - {line}')
             else:
-                new_data.append(line := line.replace('|yes|', '|no|'))
-                logger.info(f'Выключенная строка - {line}')
+                if switch(switch_no_brand, v2_result):
+                    new_data.append(line := functions.change_word(result_search_word[1], new_word, line.replace('|no|',
+                                                                                                                '|yes|')))
+                    logger.info(f'Отредактирована и включена строка - {line}')
+                else:
+                    new_data.append(line)
+                    logger.info(f'Строка на удаление - {line}')
         else:
             new_data.append(line)
     logger.debug(f'Выключено {len(del_preset)} строк, отредактировано {len(edit_preset)} строк.')
